@@ -74,7 +74,7 @@ class Blinky(Ghost):
 
     def chase(self):
         vec1 = self.position - self.pacman.position
-        vec2 = vec1 * 6
+        vec2 = vec1 * 4
         self.goal = self.position + vec2
 
 
@@ -91,7 +91,7 @@ class Pinky(Ghost):
 
     def chase(self):
         vec1 = self.position - self.pacman.position
-        vec2 = vec1 * 6
+        vec2 = vec1 * 4
         self.goal = self.position + vec2
 
 class Inky(Ghost):
@@ -106,7 +106,7 @@ class Inky(Ghost):
 
     def chase(self):
         vec1 = self.position - self.pacman.position
-        vec2 = vec1 * 6
+        vec2 = vec1 * 4
         self.goal = self.position + vec2
 
 
@@ -122,7 +122,7 @@ class Clyde(Ghost):
 
     def chase(self):
         vec1 = self.position - self.pacman.position
-        vec2 = vec1 * 6
+        vec2 = vec1 * 4
         self.goal = self.position + vec2
 
 
