@@ -57,5 +57,4 @@ class ModeController(object):
             self.timer = 0
 
     def setSpawnMode(self):
-        if self.current is FREIGHT:
-            self.current = SPAWN
+        self.current = SPAWN

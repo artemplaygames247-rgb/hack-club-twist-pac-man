@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from pygame.locals import *
 from constants import *
@@ -11,6 +13,8 @@ from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
 from mazedata import MazeData
+from time import sleep
+import threading
 
 class GameController(object):
     def __init__(self):
@@ -165,12 +169,11 @@ class GameController(object):
 
     def checkGhostEvents(self):
         for ghost in self.ghosts:
-            if self.pacman.collideGhost(ghost):
+            if ghost.visible and self.pacman.collideGhost(ghost) and ghost.mode.current == FREIGHT:
                 self.pacman.visible = False
                 ghost.visible = False
                 self.updateScore(ghost.points)
                 self.textgroup.addText(str(ghost.points), WHITE, ghost.position.x, ghost.position.y, 8, time=1)
-                self.ghosts.updatePoints()
                 self.pause.setPause(pauseTime=1, func=self.showEntities)
                 ghost.startSpawn()
                 self.nodes.allowHomeAccess(ghost)
