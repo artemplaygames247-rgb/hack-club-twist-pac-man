@@ -166,27 +166,14 @@ class GameController(object):
     def checkGhostEvents(self):
         for ghost in self.ghosts:
             if self.pacman.collideGhost(ghost):
-                if ghost.mode.current is FREIGHT:
-                    self.pacman.visible = False
-                    ghost.visible = False
-                    self.updateScore(ghost.points)                  
-                    self.textgroup.addText(str(ghost.points), WHITE, ghost.position.x, ghost.position.y, 8, time=1)
-                    self.ghosts.updatePoints()
-                    self.pause.setPause(pauseTime=1, func=self.showEntities)
-                    ghost.startSpawn()
-                    self.nodes.allowHomeAccess(ghost)
-                elif ghost.mode.current is not SPAWN:
-                    if self.pacman.alive:
-                        self.lives -=  1
-                        self.lifesprites.removeImage()
-                        self.pacman.die()               
-                        self.ghosts.hide()
-                        if self.lives <= 0:
-                            self.textgroup.showText(GAMEOVERTXT)
-                            self.pause.setPause(pauseTime=3, func=self.restartGame)
-                        else:
-                            self.pause.setPause(pauseTime=3, func=self.resetLevel)
-    
+                self.pacman.visible = False
+                ghost.visible = False
+                self.updateScore(ghost.points)
+                self.textgroup.addText(str(ghost.points), WHITE, ghost.position.x, ghost.position.y, 8, time=1)
+                self.ghosts.updatePoints()
+                self.pause.setPause(pauseTime=1, func=self.showEntities)
+                ghost.startSpawn()
+                self.nodes.allowHomeAccess(ghost)
     def checkFruitEvents(self):
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
             if self.fruit is None:
