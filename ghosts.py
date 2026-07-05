@@ -75,7 +75,7 @@ class Blinky(Ghost):
     def chase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 6
-        self.goal = self.blinky.position + vec2
+        self.goal = self.position + vec2
 
 
 
@@ -92,7 +92,7 @@ class Pinky(Ghost):
     def chase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 6
-        self.goal = self.blinky.position + vec2
+        self.goal = self.position + vec2
 
 class Inky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
@@ -107,7 +107,7 @@ class Inky(Ghost):
     def chase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 6
-        self.goal = self.blinky.position + vec2
+        self.goal = self.position + vec2
 
 
 class Clyde(Ghost):
@@ -123,7 +123,7 @@ class Clyde(Ghost):
     def chase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 6
-        self.goal = self.blinky.position + vec2
+        self.goal = self.position + vec2
 
 
 class GhostGroup(object):
