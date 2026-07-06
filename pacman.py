@@ -14,6 +14,7 @@ class Pacman(Entity):
         self.setBetweenNodes(LEFT)
         self.alive = True
         self.sprites = PacmanSprites(self)
+        self.isSprinting = False
 
     def reset(self):
         Entity.reset(self)
@@ -50,6 +51,16 @@ class Pacman(Entity):
 
     def getValidKey(self):
         key_pressed = pygame.key.get_pressed()
+
+        # Сначала проверяем спринт и ставим флаг
+        if key_pressed[K_LSHIFT]:
+            self.setSpeed(150)
+            self.isSprinting = True
+        else:
+            self.setSpeed(100)
+            self.isSprinting = False
+
+        # Затем проверяем повороты
         if key_pressed[K_UP]:
             return UP
         if key_pressed[K_DOWN]:
@@ -58,7 +69,8 @@ class Pacman(Entity):
             return LEFT
         if key_pressed[K_RIGHT]:
             return RIGHT
-        return STOP  
+
+        return STOP
 
     def eatPellets(self, pelletList):
         for pellet in pelletList:

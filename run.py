@@ -1,5 +1,3 @@
-import time
-
 import pygame
 from pygame.locals import *
 from constants import *
@@ -13,8 +11,6 @@ from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
 from mazedata import MazeData
-from time import sleep
-import threading
 
 class GameController(object):
     def __init__(self):
@@ -100,23 +96,26 @@ class GameController(object):
         self.nodes.denyAccessList(12, 26, UP, self.ghosts)
         self.nodes.denyAccessList(15, 26, UP, self.ghosts)
 
-        
-
     def update(self):
         dt = self.clock.tick(30) / 1000.0
         self.textgroup.update(dt)
         self.pellets.update(dt)
         if not self.pause.paused:
-            self.ghosts.update(dt)      
+            self.ghosts.update(dt)
             if self.fruit is not None:
                 self.fruit.update(dt)
             self.checkPelletEvents()
             self.checkGhostEvents()
             self.checkFruitEvents()
+            self.allGhostsgoingtoSpawn()
 
         if self.pacman.alive:
             if not self.pause.paused:
                 self.pacman.update(dt)
+
+                if self.pacman.isSprinting:
+                    if self.score > 0:
+                        self.updateScore(-1)
         else:
             self.pacman.update(dt)
 
@@ -158,7 +157,7 @@ class GameController(object):
                 self.updateScore(pellet.points)
                 self.pellets.pelletList.remove(pellet)
                 if pellet.name != POWERPELLET:
-                    ghost.setSpeed(ghost.speed + 0.5)
+                    ghost.speed += 0.5
 
                 elif pellet.name == POWERPELLET:
                     if self.pacman.speed > 2:
