@@ -11,7 +11,7 @@ A custom Pygame twist on the classic arcade game where the tables are turned! Bu
 * **Dynamic Level Progression:** The moment all four ghosts are sent back to the spawn base simultaneously, the game automatically advances you to the next, more difficult level.
 
 ## Controls
-
+* **Space bar:** Start/Pause the game
 * **Up / Down / Left / Right Arrows:** Move Pac-Man
 * **Left Shift (Hold):** Sprint (Drains score over time)
 
