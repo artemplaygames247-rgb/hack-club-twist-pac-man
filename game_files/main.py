@@ -11,6 +11,7 @@ from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
 from mazedata import MazeData
+import asyncio
 
 class GameController(object):
     def __init__(self):
@@ -265,11 +266,12 @@ class GameController(object):
         pygame.display.update()
 
 
-if __name__ == "__main__":
+async def main():
     game = GameController()
     game.startGame()
     while True:
         game.update()
+        await asyncio.sleep(0)  # This is the magic line that stops the freezing!
 
-
-
+if __name__ == "__main__":
+    asyncio.run(main())
