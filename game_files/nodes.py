@@ -1,15 +1,14 @@
 import pygame
 from vector import Vector2
 from constants import *
-import numpy as np
 
 class Node(object):
     def __init__(self, x, y):
         self.position = Vector2(x, y)
         self.neighbors = {UP:None, DOWN:None, LEFT:None, RIGHT:None, PORTAL:None}
-        self.access = {UP:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT], 
-                       DOWN:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT], 
-                       LEFT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT], 
+        self.access = {UP:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
+                       DOWN:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
+                       LEFT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
                        RIGHT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT]}
 
     def denyAccess(self, direction, entity):
@@ -28,7 +27,6 @@ class Node(object):
                 pygame.draw.line(screen, WHITE, line_start, line_end, 4)
                 pygame.draw.circle(screen, RED, self.position.asInt(), 12)
 
-
 class NodeGroup(object):
     def __init__(self, level):
         self.level = level
@@ -42,11 +40,21 @@ class NodeGroup(object):
         self.homekey = None
 
     def readMazeFile(self, textfile):
-        return np.loadtxt(textfile, dtype='<U1')
+        lines = []
+        with open(textfile, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line:
+
+                    if ' ' in line:
+                        lines.append(line.split())
+                    else:
+                        lines.append(list(line))
+        return lines
 
     def createNodeTable(self, data, xoffset=0, yoffset=0):
-        for row in list(range(data.shape[0])):
-            for col in list(range(data.shape[1])):
+        for row in range(len(data)):
+            for col in range(len(data[row])):
                 if data[row][col] in self.nodeSymbols:
                     x, y = self.constructKey(col+xoffset, row+yoffset)
                     self.nodesLUT[(x, y)] = Node(x, y)
@@ -54,11 +62,10 @@ class NodeGroup(object):
     def constructKey(self, x, y):
         return x * TILEWIDTH, y * TILEHEIGHT
 
-
     def connectHorizontally(self, data, xoffset=0, yoffset=0):
-        for row in list(range(data.shape[0])):
+        for row in range(len(data)):
             key = None
-            for col in list(range(data.shape[1])):
+            for col in range(len(data[row])):
                 if data[row][col] in self.nodeSymbols:
                     if key is None:
                         key = self.constructKey(col+xoffset, row+yoffset)
@@ -71,21 +78,21 @@ class NodeGroup(object):
                     key = None
 
     def connectVertically(self, data, xoffset=0, yoffset=0):
-        dataT = data.transpose()
-        for col in list(range(dataT.shape[0])):
+        cols = len(data[0]) if len(data) > 0 else 0
+        for col in range(cols):
             key = None
-            for row in list(range(dataT.shape[1])):
-                if dataT[col][row] in self.nodeSymbols:
-                    if key is None:
-                        key = self.constructKey(col+xoffset, row+yoffset)
-                    else:
-                        otherkey = self.constructKey(col+xoffset, row+yoffset)
-                        self.nodesLUT[key].neighbors[DOWN] = self.nodesLUT[otherkey]
-                        self.nodesLUT[otherkey].neighbors[UP] = self.nodesLUT[key]
-                        key = otherkey
-                elif dataT[col][row] not in self.pathSymbols:
-                    key = None
-
+            for row in range(len(data)):
+                if col < len(data[row]):
+                    if data[row][col] in self.nodeSymbols:
+                        if key is None:
+                            key = self.constructKey(col+xoffset, row+yoffset)
+                        else:
+                            otherkey = self.constructKey(col+xoffset, row+yoffset)
+                            self.nodesLUT[key].neighbors[DOWN] = self.nodesLUT[otherkey]
+                            self.nodesLUT[otherkey].neighbors[UP] = self.nodesLUT[key]
+                            key = otherkey
+                    elif data[row][col] not in self.pathSymbols:
+                        key = None
 
     def getStartTempNode(self):
         nodes = list(self.nodesLUT.values())
@@ -99,12 +106,11 @@ class NodeGroup(object):
             self.nodesLUT[key2].neighbors[PORTAL] = self.nodesLUT[key1]
 
     def createHomeNodes(self, xoffset, yoffset):
-        homedata = np.array([['X','X','+','X','X'],
-                             ['X','X','.','X','X'],
-                             ['+','X','.','X','+'],
-                             ['+','.','+','.','+'],
-                             ['+','X','X','X','+']])
-
+        homedata = [['X','X','+','X','X'],
+                    ['X','X','.','X','X'],
+                    ['+','X','.','X','+'],
+                    ['+','.','+','.','+'],
+                    ['+','X','X','X','+']]
         self.createNodeTable(homedata, xoffset, yoffset)
         self.connectHorizontally(homedata, xoffset, yoffset)
         self.connectVertically(homedata, xoffset, yoffset)

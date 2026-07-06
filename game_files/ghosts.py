@@ -47,7 +47,7 @@ class Ghost(Entity):
     def startSpawn(self):
         self.mode.setSpawnMode()
         if self.mode.current == SPAWN:
-            self.setSpeed(150 + 0.5)
+            self.setSpeed(150)
             self.directionMethod = self.goalDirection
             self.spawn()
 

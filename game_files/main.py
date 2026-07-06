@@ -34,6 +34,8 @@ class GameController(object):
         self.fruitCaptured = []
         self.fruitNode = None
         self.mazedata = MazeData()
+        self.fruits_spawned = 0
+        self.fruit_thresholds = [50, 140, 160, 180, 200, 220]
 
     def setBackground(self):
         self.background_norm = pygame.surface.Surface(SCREENSIZE).convert()
@@ -112,6 +114,7 @@ class GameController(object):
 
         if self.pacman.alive:
             if not self.pause.paused:
+                self.pacman.can_sprint = (self.score > 0)
                 self.pacman.update(dt)
 
                 if getattr(self.pacman, 'isSprinting', False):
@@ -149,20 +152,22 @@ class GameController(object):
                             self.showEntities()
                         else:
                             self.textgroup.showText(PAUSETXT)
-                            #self.hideEntities()
 
     def checkPelletEvents(self):
         for ghost in self.ghosts:
-            pellet = ghost.eatPellets(self.pellets.pelletList)
-            if pellet:
-                self.pellets.numEaten += 1
-                self.pellets.pelletList.remove(pellet)
-                if pellet.name != POWERPELLET:
-                    ghost.speed += 0.5
+            if ghost.mode.current != SPAWN:
+                pellet = ghost.eatPellets(self.pellets.pelletList)
+                if pellet:
+                    self.pellets.numEaten += 1
+                    self.pellets.pelletList.remove(pellet)
+                    if pellet.name != POWERPELLET:
+                        ghost.speed += 0.5
 
-                elif pellet.name == POWERPELLET:
-                    if self.pacman.speed > 2:
-                        self.pacman.speed = self.pacman.speed - 2
+                    elif pellet.name == POWERPELLET:
+                        if self.pacman.speed >= 40:
+                            self.pacman.speed -= 15
+                        elif self.pacman.speed >= 20:
+                            self.pacman.speed -= 5
 
     def checkGhostEvents(self):
         for ghost in self.ghosts:
@@ -174,6 +179,7 @@ class GameController(object):
                 self.pause.setPause(pauseTime=1, func=self.showEntities)
                 ghost.startSpawn()
                 self.nodes.allowHomeAccess(ghost)
+
     def allGhostsgoingtoSpawn(self):
         ghosts_on_spawn = 0
         for ghost in self.ghosts:
@@ -181,18 +187,20 @@ class GameController(object):
                 ghosts_on_spawn += 1
         if ghosts_on_spawn == 4:
             self.nextLevel()
+            self.pacman.speed = 100
 
     def checkFruitEvents(self):
-        if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
-            if self.fruit is None:
-                self.fruit = Fruit(self.nodes.getNodeFromTiles(9, 20), self.level)
-                print(self.fruit)
+        if self.fruits_spawned < len(self.fruit_thresholds):
+            next_threshold = self.fruit_thresholds[self.fruits_spawned]
+            if self.pellets.numEaten == next_threshold:
+                if self.fruit is None:
+                    self.fruit = Fruit(self.nodes.getNodeFromTiles(9, 20),
+                                       self.level)
+                    self.fruits_spawned += 1
         if self.fruit is not None:
             if self.pacman.collideCheck(self.fruit):
                 for ghost in self.ghosts:
                     ghost.startSpawn()
-                self.updateScore(self.fruit.points)
-                self.textgroup.addText(str(self.fruit.points), WHITE, self.fruit.position.x, self.fruit.position.y, 8, time=1)
                 fruitCaptured = False
                 for fruit in self.fruitCaptured:
                     if fruit.get_offset() == self.fruit.image.get_offset():
@@ -201,6 +209,11 @@ class GameController(object):
                 if not fruitCaptured:
                     self.fruitCaptured.append(self.fruit.image)
                 self.fruit = None
+                self.lives -= 1
+                self.lifesprites.removeImage()
+                if self.lives <= 0:
+                    self.restartGame()
+                    self.pacman.speed = 100
             elif self.fruit.destroy:
                 self.fruit = None
 
@@ -216,6 +229,7 @@ class GameController(object):
         self.showEntities()
         self.level += 1
         self.pause.paused = True
+        self.fruits_spawned = 0
         self.startGame()
         self.textgroup.updateLevel(self.level)
 
@@ -224,6 +238,7 @@ class GameController(object):
         self.level = 0
         self.pause.paused = True
         self.fruit = None
+        self.fruits_spawned = 0
         self.startGame()
         self.score = 0
         self.textgroup.updateScore(self.score)
@@ -271,7 +286,7 @@ async def main():
     game.startGame()
     while True:
         game.update()
-        await asyncio.sleep(0)  # This is the magic line that stops the freezing!
+        await asyncio.sleep(0)
 
 if __name__ == "__main__":
     asyncio.run(main())
