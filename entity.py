@@ -125,3 +125,11 @@ class Entity(object):
             else:
                 p = self.position.asInt()
                 pygame.draw.circle(screen, self.color, p, self.radius)
+
+    def collideCheck(self, other):
+        d = self.position - other.position
+        dSquared = d.magnitudeSquared()
+        rSquared = (self.collideRadius + other.collideRadius)**2
+        if dSquared <= rSquared:
+            return True
+        return False

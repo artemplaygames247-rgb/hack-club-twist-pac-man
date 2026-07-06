@@ -47,7 +47,7 @@ class Ghost(Entity):
     def startSpawn(self):
         self.mode.setSpawnMode()
         if self.mode.current == SPAWN:
-            self.setSpeed(150)
+            self.setSpeed(150 + 0.5)
             self.directionMethod = self.goalDirection
             self.spawn()
 
@@ -62,6 +62,11 @@ class Ghost(Entity):
         self.directionMethod = self.goalDirection
         self.homeNode.denyAccess(DOWN, self)
 
+    def eatPellets(self, pelletList):
+        for pellet in pelletList:
+            if self.collideCheck(pellet):
+                return pellet
+        return None
 
 
 

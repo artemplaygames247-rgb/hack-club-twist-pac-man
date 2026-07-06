@@ -68,11 +68,3 @@ class Pacman(Entity):
     
     def collideGhost(self, ghost):
         return self.collideCheck(ghost)
-
-    def collideCheck(self, other):
-        d = self.position - other.position
-        dSquared = d.magnitudeSquared()
-        rSquared = (self.collideRadius + other.collideRadius)**2
-        if dSquared <= rSquared:
-            return True
-        return False

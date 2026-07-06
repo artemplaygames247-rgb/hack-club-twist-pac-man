@@ -16,6 +16,8 @@ from mazedata import MazeData
 from time import sleep
 import threading
 
+x = 0
+
 class GameController(object):
     def __init__(self):
         pygame.init()
@@ -151,21 +153,18 @@ class GameController(object):
                             #self.hideEntities()
 
     def checkPelletEvents(self):
-        pellet = self.pacman.eatPellets(self.pellets.pelletList)
-        if pellet:
-            self.pellets.numEaten += 1
-            self.updateScore(pellet.points)
-            if self.pellets.numEaten == 30:
-                self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
-            if self.pellets.numEaten == 70:
-                self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
-            self.pellets.pelletList.remove(pellet)
-            if pellet.name == POWERPELLET:
-                self.ghosts.startFreight()
-            if self.pellets.isEmpty():
-                self.flashBG = True
-                self.hideEntities()
-                self.pause.setPause(pauseTime=3, func=self.nextLevel)
+        for ghost in self.ghosts:
+            pellet = ghost.eatPellets(self.pellets.pelletList)
+            if pellet:
+                self.pellets.numEaten += 1
+                self.updateScore(pellet.points)
+                self.pellets.pelletList.remove(pellet)
+                if pellet.name != POWERPELLET:
+                    ghost.setSpeed(ghost.speed + 0.5)
+
+                elif pellet.name == POWERPELLET:
+                    if self.pacman.speed > 2:
+                        self.pacman.speed = self.pacman.speed - 2
 
     def checkGhostEvents(self):
         for ghost in self.ghosts:
