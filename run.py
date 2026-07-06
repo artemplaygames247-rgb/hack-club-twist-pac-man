@@ -16,8 +16,6 @@ from mazedata import MazeData
 from time import sleep
 import threading
 
-x = 0
-
 class GameController(object):
     def __init__(self):
         pygame.init()
@@ -176,6 +174,14 @@ class GameController(object):
                 self.pause.setPause(pauseTime=1, func=self.showEntities)
                 ghost.startSpawn()
                 self.nodes.allowHomeAccess(ghost)
+    def allGhostsgoingtoSpawn(self):
+        ghosts_on_spawn = 0
+        for ghost in self.ghosts:
+            if ghost.mode.current == SPAWN:
+                ghosts_on_spawn += 1
+        if ghosts_on_spawn == 4:
+            self.nextLevel()
+
     def checkFruitEvents(self):
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
             if self.fruit is None:
