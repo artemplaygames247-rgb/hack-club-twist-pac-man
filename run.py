@@ -189,6 +189,8 @@ class GameController(object):
                 print(self.fruit)
         if self.fruit is not None:
             if self.pacman.collideCheck(self.fruit):
+                for ghost in self.ghosts:
+                    ghost.startSpawn()
                 self.updateScore(self.fruit.points)
                 self.textgroup.addText(str(self.fruit.points), WHITE, self.fruit.position.x, self.fruit.position.y, 8, time=1)
                 fruitCaptured = False
