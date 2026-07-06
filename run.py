@@ -113,9 +113,10 @@ class GameController(object):
             if not self.pause.paused:
                 self.pacman.update(dt)
 
-                if self.pacman.isSprinting:
+                if getattr(self.pacman, 'isSprinting', False):
                     if self.score > 0:
                         self.updateScore(-1)
+
         else:
             self.pacman.update(dt)
 
@@ -154,7 +155,6 @@ class GameController(object):
             pellet = ghost.eatPellets(self.pellets.pelletList)
             if pellet:
                 self.pellets.numEaten += 1
-                self.updateScore(pellet.points)
                 self.pellets.pelletList.remove(pellet)
                 if pellet.name != POWERPELLET:
                     ghost.speed += 0.5

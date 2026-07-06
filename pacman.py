@@ -71,12 +71,6 @@ class Pacman(Entity):
             return RIGHT
 
         return STOP
-
-    def eatPellets(self, pelletList):
-        for pellet in pelletList:
-            if self.collideCheck(pellet):
-                return pellet
-        return None    
     
     def collideGhost(self, ghost):
         return self.collideCheck(ghost)
