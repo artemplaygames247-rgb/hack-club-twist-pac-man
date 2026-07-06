@@ -152,7 +152,6 @@ class GameController(object):
 
     def checkPelletEvents(self):
         pellet = self.pacman.eatPellets(self.pellets.pelletList)
-
         if pellet:
             self.pellets.numEaten += 1
             self.updateScore(pellet.points)
@@ -170,7 +169,7 @@ class GameController(object):
 
     def checkGhostEvents(self):
         for ghost in self.ghosts:
-            if ghost.visible and self.pacman.collideGhost(ghost) and ghost.mode.current == FREIGHT:
+            if ghost.visible and self.pacman.collideGhost(ghost) and ghost.mode.current != SPAWN:
                 self.pacman.visible = False
                 ghost.visible = False
                 self.updateScore(ghost.points)

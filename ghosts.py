@@ -28,14 +28,14 @@ class Ghost(Entity):
         self.mode.update(dt)
         if self.mode.current is SCATTER:
             self.scatter()
-        elif self.mode.current is CHASE:
-            self.chase()
+        elif self.mode.current is UNCHASE:
+            self.unchase()
         Entity.update(self, dt)
 
     def scatter(self):
         self.goal = Vector2()
 
-    def chase(self):
+    def unchase(self):
         self.goal = self.pacman.position
 
     def spawn(self):
@@ -72,7 +72,7 @@ class Blinky(Ghost):
         self.color = RED
         self.sprites = GhostSprites(self)
 
-    def chase(self):
+    def unchase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 4
         self.goal = self.position + vec2
@@ -89,7 +89,7 @@ class Pinky(Ghost):
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, 0)
 
-    def chase(self):
+    def unchase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 4
         self.goal = self.position + vec2
@@ -104,7 +104,7 @@ class Inky(Ghost):
     def scatter(self):
         self.goal = Vector2(TILEWIDTH*NCOLS, TILEHEIGHT*NROWS)
 
-    def chase(self):
+    def unchase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 4
         self.goal = self.position + vec2
@@ -120,7 +120,7 @@ class Clyde(Ghost):
     def scatter(self):
         self.goal = Vector2(0, TILEHEIGHT*NROWS)
 
-    def chase(self):
+    def unchase(self):
         vec1 = self.position - self.pacman.position
         vec2 = vec1 * 4
         self.goal = self.position + vec2

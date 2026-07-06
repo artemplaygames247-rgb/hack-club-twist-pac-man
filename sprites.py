@@ -78,7 +78,7 @@ class GhostSprites(Spritesheet):
 
     def update(self, dt):
         x = self.x[self.entity.name]
-        if self.entity.mode.current in [SCATTER, CHASE]:
+        if self.entity.mode.current in [SCATTER, UNCHASE]:
             if self.entity.direction == LEFT:
                 self.entity.image = self.getImage(x, 8)
             elif self.entity.direction == RIGHT:

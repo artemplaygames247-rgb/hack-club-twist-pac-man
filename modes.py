@@ -10,7 +10,7 @@ class MainMode(object):
         if self.timer >= self.time:
             if self.mode is SCATTER:
                 self.chase()
-            elif self.mode is CHASE:
+            elif self.mode is UNCHASE:
                 self.scatter()
 
     def scatter(self):
@@ -19,7 +19,7 @@ class MainMode(object):
         self.timer = 0
 
     def chase(self):
-        self.mode = CHASE
+        self.mode = UNCHASE
         self.time = 20
         self.timer = 0
 
@@ -40,7 +40,7 @@ class ModeController(object):
                 self.time = None
                 self.entity.normalMode()
                 self.current = self.mainmode.mode
-        elif self.current in [SCATTER, CHASE]:
+        elif self.current in [SCATTER, UNCHASE]:
             self.current = self.mainmode.mode
 
         if self.current is SPAWN:
@@ -49,7 +49,7 @@ class ModeController(object):
                 self.current = self.mainmode.mode
 
     def setFreightMode(self):
-        if self.current in [SCATTER, CHASE]:
+        if self.current in [SCATTER, UNCHASE]:
             self.timer = 0
             self.time = 7
             self.current = FREIGHT
