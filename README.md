@@ -10,7 +10,7 @@ A custom Pygame twist on the classic arcade game where the tables are turned! Bu
 * **Power Pellet Penalty:** Beware of the big dots! When a ghost eats a Power Pellet, Pac Man is immediately inflicted with a severe speed loss.
 
 
-* **Tactical Sprint:** Hold the `Left Shift` key to give PacMan a burst of speed to escape tight situations or to capture ghosts. However, you can **only sprint if you have a score greater than 0**, and sprinting rapidly drains your score (30 points per second)! Use it wisely.
+* **Tactical Sprint:** Hold the `Left Shift` key to give Pac Man a burst of speed to escape tight situations or to capture ghosts. However, you can **only sprint if you have a score greater than 0**, and sprinting rapidly drains your score (30 points per second)! Use it wisely.
 
 
 * **Level Progression & The Fruit Shortcut:** There are two ways to complete a level:
